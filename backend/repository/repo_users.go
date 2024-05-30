@@ -13,6 +13,7 @@ type BaseDatosUsers struct {
 // con esto se devuelve base de datos inicializada
 func NewBaseDatosUsers() *BaseDatosUsers {
 	return &BaseDatosUsers{
+		//Memoria: make(map[string]models.User),
 		Memoria: map[string]models.User{
 			"Lau153": {
 				Usu:         "Lau153",
