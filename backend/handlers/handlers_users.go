@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	models "github.com/lilianabarbosa15/PROYECTO_FINAL_DesarrolloWeb/models"
 	repository "github.com/lilianabarbosa15/PROYECTO_FINAL_DesarrolloWeb/repository"
 )
@@ -63,10 +64,10 @@ func (hc *HandlerUsuarios) NuevoUsuario() http.HandlerFunc {
 
 func (hc *HandlerUsuarios) TraerUsuario() http.HandlerFunc {
 	/*
-		Función de validación, permite retornar información especifica de un usuario.
+		Función de validación, permite retornar información especifica (toda) de un usuario.
 	*/
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		usu := r.PathValue("usu")
+		usu := mux.Vars(r)["usu"]
 		if usu == "" {
 			http.Error(w, "usuario no valido", http.StatusBadRequest)
 			return
@@ -89,7 +90,8 @@ func (hc *HandlerUsuarios) TraerUsuario() http.HandlerFunc {
 
 /*func (hc *HandlerUsuarios) ReportedeUsuario() http.HandlerFunc {
 	/*
-		Función de .
+		Función de reporte, permite retornar la información de las reservas de cierto usuario
+		así como el total a pagar con el fin de confirmar la reserva.
 	//
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		//crea la reserva en la base de datos de los carros:
