@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Geologica:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Catamaran:wght@100..900&family=Geologica:wght@100..900&display=swap');
+
+
+*{
+    margin: 0;
+    padding: 0;
+}
+body{ height: 100vh; width: 100%}
+main{
+    
+    width: 100%;
+    display:flex;
+    flex-direction: row;
+}
+
+.parteIzquierda , .parteDerecha{
+    width: 50%;
+   
+}
+.parteIzquierda{
+    display: flex;
+    flex-direction: column;
+    margin-top: 3em;
+    align-items: center;
+    justify-content: space-around;
+    font-family:'Geologica',sans-serif;
+}
+.parteIzquierda h1{
+    color:#FF786C;
+    font-size: 40px ;
+    
+}
+.parteIzquierda button{
+    margin-top: 2em;
+    color: white;
+    font-weight: bolder;
+    height: 7vh;
+    border-radius: 7px;
+    background-color: rgb(240, 130, 130);
+    border-color: transparent;
+    font-family: 'Geologica',sans-serif;
+    font-size: medium;
+    margin-bottom: 2em;
+}
+
+
+.parteIzquierda h5{
+    margin-top: 0.5em;
+    font-family: 'Catamaran',serif;
+    font-size: 17px;
+    text-align: justify;
+    width: 40vw;
+
+}
+
+.form__field{
+    margin-top: 0.5em;
+    background-color: white;
+    height: 4em;
+    width: 35vw;
+    border-radius: 4px;
+    padding: 3px 7px;
+    font-family: 'Catamaran', serif;
+    font-size: 16px;
+    color: black;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+}
+.form__field input{
+    
+    border: 0.4px solid   #eb997566;
+
+    color: black;
+    font-weight: 400;
+    height: 40px;
+    border-radius: 4px;
+    padding-left: 3px;
+    background-color:#f3b3984f ;
+}
+
+#form{
+    height: 72vh;
+    width: 36vw;
+    display: flex;
+    flex-direction: column;
+
+}
+.parteDerecha{
+    background-image: url('../image_register.jpg') ;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+.fa-solid , .fa-car-on{
+  
+    margin-top: 0.5em;
+    font-size: xxx-large;
+     
+}
+
+.parteDerecha h2{
+    font-size: 22px ;
+    font-family:'Geologica',sans-serif;
+    
+
+}
+.cuadroReseña{
+    margin-top: 22em;
+    background-color: white;
+    width: 40vw;
+    height: 64px;
+    padding: 11px 11px;
+    position: relative;
+    font-size: 1em ;
+    font-family:'Geologica',sans-serif;
+    color:rgb(118, 118, 118);
+    font-weight: bold;
+    
+}
+.cuadroReseña p{
+    text-align: justify;
+    font-size: smaller;
+}
+.cuadroReseña span{
+    font-size: small;
+    font-style: oblique;
+}
+.cuadroarroa {
+    position: absolute;
+    top: -19px;
+    background-color: #FF786C;
+    width: 33px;
+    height: 33px;
+    border-radius: 5px;
+    color: white;
+    font-size: x-large;
+    left: -20px;
+    text-align: center;
+    font-family:'Geologica',sans-serif;
+}
+.cuadroarroa span {
+    font-style: normal;
+    font-size: x-large;
+}
