@@ -2,8 +2,11 @@ package handlers
 
 import (
 	"encoding/json"
+	"io"
 	"net/http"
+	"strconv"
 
+	"github.com/gorilla/mux"
 	models "github.com/lilianabarbosa15/PROYECTO_FINAL_DesarrolloWeb/models"
 	repository "github.com/lilianabarbosa15/PROYECTO_FINAL_DesarrolloWeb/repository"
 )
@@ -11,6 +14,8 @@ import (
 /*
 	Funciones encargadas de implementar las funciones relacionadas a la base de datos de los autos
 */
+
+//var hc_car *HandlerAutos
 
 type HandlerAutos struct {
 	BD *repository.BaseDatosAutomobiles
@@ -41,24 +46,55 @@ func (hc *HandlerAutos) ListarAutos() http.HandlerFunc {
 	})
 }
 
-/*
 func (hc *HandlerAutos) TraerAutos() http.HandlerFunc {
 	/*
 		Función que retorna todos los autos disponibles bajo cierta categoría.
-		La categoría puede ser:
-			Type_transmission string    //puede ser: manual ó automático
-			Type_fuel         string    //puede ser: gasolina, Diesel ó eléctrico
-			Year              int       //año de fabricación del modelo del carro
-			Model             string    //modelo del carro en stock
-			Color             string    //color del carro en stock
-			Price             int       //costo de renta del carro por día
-			Seats             int       //capacidad de personas que soporta el carro
-			Brand             string    //marca del carro en stock
-	///////////
+		La categoría puede ser: type_transmission (manual ó automatico),
+		type_fuel (gasolina, diesel ó electrico), year (año de fabricación del
+		modelo del carro), model (modelo del carro en stock), color (color del
+		carro en stock), price (costo de renta del carro por día), seats
+		(capacidad de personas que soporta el carro), brand (marca del carro en
+		stock)
+	*/
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		filter := mux.Vars(r)["filter"]
+		kind := mux.Vars(r)["kind"]
+		kind_int, _ := strconv.Atoi(kind)
 		autos := []models.Automobile{}
 		for _, auto := range hc.BD.Memoria {
-			autos = append(autos, auto)
+			if filter == "type_transmission" {
+				if auto.Type_transmission == kind {
+					autos = append(autos, auto)
+				}
+			} else if filter == "type_fuel" {
+				if auto.Type_fuel == kind {
+					autos = append(autos, auto)
+				}
+			} else if filter == "year" {
+				if strconv.Itoa(auto.Year) == kind {
+					autos = append(autos, auto)
+				}
+			} else if filter == "model" {
+				if auto.Model == kind {
+					autos = append(autos, auto)
+				}
+			} else if filter == "color" {
+				if auto.Color == kind {
+					autos = append(autos, auto)
+				}
+			} else if filter == "price" {
+				if auto.Price <= kind_int {
+					autos = append(autos, auto)
+				}
+			} else if filter == "seats" {
+				if auto.Seats >= kind_int {
+					autos = append(autos, auto)
+				}
+			} else if filter == "brand" {
+				if auto.Brand == kind {
+					autos = append(autos, auto)
+				}
+			}
 		}
 		jsonCars, err := json.Marshal(autos)
 		if err != nil {
@@ -68,4 +104,62 @@ func (hc *HandlerAutos) TraerAutos() http.HandlerFunc {
 		w.WriteHeader(http.StatusOK)
 		w.Write(jsonCars)
 	})
-}*/
+}
+
+func (hc *HandlerAutos) ActualizarAuto() http.HandlerFunc {
+	/*
+		Función de registro de stock, permite crear/alterar autos en la base de
+		datos de automobiles.
+	*/
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var bandera bool = false
+		body, err := io.ReadAll(r.Body)
+		if err != nil {
+			http.Error(w, "fallo en la peticion", http.StatusBadRequest)
+		}
+		auto := models.Automobile{}
+		err = json.Unmarshal(body, &auto)
+		if err != nil {
+			http.Error(w, "fallo al codificar en json", http.StatusInternalServerError)
+		}
+
+		for _, autoBase := range hc.BD.Memoria {
+			if autoBase.Ref == auto.Ref { //PATCH
+				if auto.Type_transmission != "" {
+					autoBase.Type_transmission = auto.Type_transmission
+				}
+				if auto.Type_fuel != "" {
+					autoBase.Type_fuel = auto.Type_fuel
+				}
+				if auto.Year != 0 {
+					autoBase.Year = auto.Year
+				}
+				if auto.Model != "" {
+					autoBase.Model = auto.Model
+				}
+				if auto.Color != "" {
+					autoBase.Color = auto.Color
+				}
+				if auto.Price != 0 {
+					autoBase.Price = auto.Price
+				}
+				if auto.Seats != 0 {
+					autoBase.Seats = auto.Seats
+				}
+				if auto.Brand != "" {
+					autoBase.Brand = auto.Brand
+				}
+				if auto.Image != "" {
+					autoBase.Image = auto.Image
+				}
+				hc.BD.Memoria[auto.Ref] = autoBase
+				bandera = true
+				break
+			}
+		}
+		if !bandera { //POST
+			hc.BD.Memoria[auto.Ref] = auto
+		}
+		w.WriteHeader(http.StatusCreated)
+	})
+}

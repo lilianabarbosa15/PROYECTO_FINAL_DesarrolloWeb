@@ -14,6 +14,8 @@ import (
 	Funciones encargadas de implementar las funciones relacionadas a la base de datos de los usuarios
 */
 
+//var hc *HandlerUsuarios
+
 type HandlerUsuarios struct {
 	BD *repository.BaseDatosUsers
 }
@@ -43,11 +45,17 @@ func (hc *HandlerUsuarios) ListarUsuarios() http.HandlerFunc {
 	})
 }
 
-func (hc *HandlerUsuarios) NuevoUsuario() http.HandlerFunc {
+func (hc *HandlerUsuarios) ActualizarUsuario() http.HandlerFunc {
 	/*
 		Función de registro, permite crear nuevos usuarios en la base de datos de usuarios.
+		Usu         (string, nombre del usuario)
+		Password    (string, contraseña del usuario)
+		Automobiles (int, número de automobiles que el usuario ha rentado)
+		Types_cars  ([]string, slice con la referencia de cada uno de los carros prestados)
+		Debts (int, deuda del usuario)
 	*/
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		change := mux.Vars(r)["change"]
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
 			http.Error(w, "fallo la peticion POST", http.StatusBadRequest)
@@ -57,7 +65,29 @@ func (hc *HandlerUsuarios) NuevoUsuario() http.HandlerFunc {
 		if err != nil {
 			http.Error(w, "fallo al codificar en json", http.StatusInternalServerError)
 		}
-		hc.BD.Memoria[usuario.Usu] = usuario
+		if change == "registration" {
+			hc.BD.Memoria[usuario.Usu] = usuario
+		} else if change == "information" {
+			var usuBase models.User = hc.BD.Memoria[usuario.Usu]
+			usuBase.Password = usuario.Password
+			hc.BD.Memoria[usuario.Usu] = usuBase
+		} /*else if change == "reservation" {
+			//MEJOR HACER ESTO POR HILOS (QUE SE EJECUTE EN AMBAS PARTES AL TIEMPO AUTOS Y USERS)
+			var usuBase models.User = hc.BD.Memoria[usuario.Usu] //se altera en base usuario
+
+			if usuBase.Automobiles != 0 { //antes se tenían rentados otros carros
+				//se borran todos los carros que se tenían:
+				for _, ref_car := range usuBase.Types_cars {
+					var carBase models.Automobile = hc_car.BD.Memoria[ref_car]
+					carBase.Usedby = ""
+					carBase.DateBegin = time.Date(0001, 1, 1, 00, 00, 00, 00, time.UTC)
+					carBase.DateEnd = time.Date(0001, 1, 1, 00, 00, 00, 00, time.UTC)
+					hc_car.BD.Memoria[ref_car] = carBase
+				}
+				//
+			}
+			hc.BD.Memoria[usuario.Usu] = usuBase
+		}*/
 		w.WriteHeader(http.StatusCreated)
 	})
 }
@@ -87,37 +117,3 @@ func (hc *HandlerUsuarios) TraerUsuario() http.HandlerFunc {
 		w.Write(payload)
 	})
 }
-
-/*func (hc *HandlerUsuarios) ReportedeUsuario() http.HandlerFunc {
-	/*
-		Función de reporte, permite retornar la información de las reservas de cierto usuario
-		así como el total a pagar con el fin de confirmar la reserva.
-	//
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		//crea la reserva en la base de datos de los carros:
-
-		//retorna la lista de autos a nombre del usuario:
-		usu := r.PathValue("usu")
-		if usu == "" {
-			http.Error(w, "usuario no valido", http.StatusBadRequest)
-			return
-		}
-		infousuario, ok := hc.BD.Memoria[usu]
-		if !ok {
-			http.Error(w, "no se encuentra informacion para ese usuario", http.StatusNotFound)
-			return
-		}
-		report := []string{}
-		report = append(report, infousuario.Types_cars...)
-		report = append(report, strconv.Itoa(infousuario.Debts))
-		//
-		payload, err := json.Marshal(report)
-		if err != nil {
-			http.Error(w, "fallo la codificacion a JSON de la informacion", http.StatusInternalServerError)
-			return
-		}
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(payload)
-	})
-}*/
