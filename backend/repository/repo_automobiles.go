@@ -28,8 +28,8 @@ func NewBaseDatosAutomobiles() *BaseDatosAutomobiles {
 				Brand:             "mazda",
 				Image:             "https://www.mazda.com.co/globalassets/cars/mazda-3-2024/versiones-y-menu/desplegable-vehiculos.png",
 				Usedby:            "Lily1526",
-				DateBegin:         time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 10, 0, 0, 0, time.UTC),
-				DateEnd:           time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day()+1, 10, 0, 0, 0, time.UTC),
+				DateBegin:         time.Date(2024, 06, 02, 10, 0, 0, 0, time.UTC), //time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 10, 0, 0, 0, time.UTC),
+				DateEnd:           time.Date(2024, 06, 03, 10, 0, 0, 0, time.UTC), //time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day()+1, 10, 0, 0, 0, time.UTC),
 			},
 			"ref0002": {
 				Ref:               "ref0002",

@@ -106,13 +106,12 @@ func (hc *HandlerAutos) TraerAutos() http.HandlerFunc {
 	})
 }
 
-func (hc *HandlerAutos) ActualizarAuto() http.HandlerFunc {
+func (hc *HandlerAutos) NuevoAuto() http.HandlerFunc {
 	/*
-		Función de registro de stock, permite crear/alterar autos en la base de
+		Función de registro de stock, permite crear autos en la base de
 		datos de automobiles.
 	*/
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		var bandera bool = false
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
 			http.Error(w, "fallo en la peticion", http.StatusBadRequest)
@@ -122,44 +121,7 @@ func (hc *HandlerAutos) ActualizarAuto() http.HandlerFunc {
 		if err != nil {
 			http.Error(w, "fallo al codificar en json", http.StatusInternalServerError)
 		}
-
-		for _, autoBase := range hc.BD.Memoria {
-			if autoBase.Ref == auto.Ref { //PATCH
-				if auto.Type_transmission != "" {
-					autoBase.Type_transmission = auto.Type_transmission
-				}
-				if auto.Type_fuel != "" {
-					autoBase.Type_fuel = auto.Type_fuel
-				}
-				if auto.Year != 0 {
-					autoBase.Year = auto.Year
-				}
-				if auto.Model != "" {
-					autoBase.Model = auto.Model
-				}
-				if auto.Color != "" {
-					autoBase.Color = auto.Color
-				}
-				if auto.Price != 0 {
-					autoBase.Price = auto.Price
-				}
-				if auto.Seats != 0 {
-					autoBase.Seats = auto.Seats
-				}
-				if auto.Brand != "" {
-					autoBase.Brand = auto.Brand
-				}
-				if auto.Image != "" {
-					autoBase.Image = auto.Image
-				}
-				hc.BD.Memoria[auto.Ref] = autoBase
-				bandera = true
-				break
-			}
-		}
-		if !bandera { //POST
-			hc.BD.Memoria[auto.Ref] = auto
-		}
+		hc.BD.Memoria[auto.Ref] = auto
 		w.WriteHeader(http.StatusCreated)
 	})
 }

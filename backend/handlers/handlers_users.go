@@ -2,8 +2,11 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
+	"math"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/mux"
 	models "github.com/lilianabarbosa15/PROYECTO_FINAL_DesarrolloWeb/models"
@@ -45,9 +48,10 @@ func (hc *HandlerUsuarios) ListarUsuarios() http.HandlerFunc {
 	})
 }
 
-func (hc *HandlerUsuarios) ActualizarUsuario() http.HandlerFunc {
+func (hc *HandlerUsuarios) ActualizarUsuario(hc_car *HandlerAutos) http.HandlerFunc {
 	/*
-		Función de registro, permite crear nuevos usuarios en la base de datos de usuarios.
+		Función de registro, permite crear nuevos usuarios y/o actualizar la información
+		asociada a un usuario existente en la base de datos de usuarios.
 		Usu         (string, nombre del usuario)
 		Password    (string, contraseña del usuario)
 		Automobiles (int, número de automobiles que el usuario ha rentado)
@@ -71,23 +75,51 @@ func (hc *HandlerUsuarios) ActualizarUsuario() http.HandlerFunc {
 			var usuBase models.User = hc.BD.Memoria[usuario.Usu]
 			usuBase.Password = usuario.Password
 			hc.BD.Memoria[usuario.Usu] = usuBase
-		} /*else if change == "reservation" {
-			//MEJOR HACER ESTO POR HILOS (QUE SE EJECUTE EN AMBAS PARTES AL TIEMPO AUTOS Y USERS)
-			var usuBase models.User = hc.BD.Memoria[usuario.Usu] //se altera en base usuario
-
+		} else if change == "reservation" {
+			var usuBase models.User = hc.BD.Memoria[usuario.Usu]
 			if usuBase.Automobiles != 0 { //antes se tenían rentados otros carros
-				//se borran todos los carros que se tenían:
-				for _, ref_car := range usuBase.Types_cars {
-					var carBase models.Automobile = hc_car.BD.Memoria[ref_car]
-					carBase.Usedby = ""
-					carBase.DateBegin = time.Date(0001, 1, 1, 00, 00, 00, 00, time.UTC)
-					carBase.DateEnd = time.Date(0001, 1, 1, 00, 00, 00, 00, time.UTC)
-					hc_car.BD.Memoria[ref_car] = carBase
+				//se revisa las reservas anteriores que se tenían:
+				for ref_type_car, info_car_rentado := range usuBase.Types_cars {
+					fmt.Println("Ref: ", ref_type_car)
+					var carBase models.Automobile = hc_car.BD.Memoria[ref_type_car]
+					fmt.Println("carBase: ", carBase)
+					if time.Now().After(info_car_rentado[1]) || time.Now().Before(info_car_rentado[0]) { //ahora es despues que fecha fin ó ahora antes que fecha de inicio
+						//se borra la info del usuario asociada al carro
+						carBase.Usedby = ""
+						carBase.DateBegin = time.Date(0001, 1, 1, 00, 00, 00, 00, time.UTC)
+						carBase.DateEnd = time.Date(0001, 1, 1, 00, 00, 00, 00, time.UTC)
+						hc_car.BD.Memoria[ref_type_car] = carBase
+						//se borra la info del carro asociada al usuario
+						usuBase.Automobiles -= 1
+						horas := info_car_rentado[1].Sub(info_car_rentado[0]).Hours()
+						dias := int(math.Trunc(horas / 24))
+						fmt.Println("dias: ", dias)
+						costo := carBase.Price * dias
+						fmt.Println("costo: ", costo)
+						usuBase.Debts -= costo
+						delete(usuBase.Types_cars, ref_type_car)
+					}
 				}
-				//
+			}
+			//se procede a actualizar la base de datos de carros con información actual
+			for ref_car, info_car := range usuario.Types_cars {
+				fmt.Println("ref_car: ", ref_car)
+				//actualizacion de usuario en carro
+				var carBase models.Automobile = hc_car.BD.Memoria[ref_car]
+				carBase.Usedby = usuario.Usu
+				carBase.DateBegin = info_car[0]
+				carBase.DateEnd = info_car[1]
+				hc_car.BD.Memoria[ref_car] = carBase
+				//actualizacion de carros en usuario
+				usuBase.Automobiles += 1
+				usuBase.Types_cars[ref_car] = info_car
+				dias := int(math.Trunc((info_car[1].Sub(info_car[0]).Hours()) / 24))
+				costo := carBase.Price * dias
+				fmt.Println("costo: ", costo)
+				usuBase.Debts += costo
 			}
 			hc.BD.Memoria[usuario.Usu] = usuBase
-		}*/
+		}
 		w.WriteHeader(http.StatusCreated)
 	})
 }
