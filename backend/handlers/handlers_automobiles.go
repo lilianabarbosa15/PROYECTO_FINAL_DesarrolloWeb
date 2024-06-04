@@ -15,8 +15,6 @@ import (
 	Funciones encargadas de implementar las funciones relacionadas a la base de datos de los autos
 */
 
-//var hc_car *HandlerAutos
-
 type HandlerAutos struct {
 	BD *repository.BaseDatosAutomobiles
 }
@@ -122,6 +120,28 @@ func (hc *HandlerAutos) NuevoAuto() http.HandlerFunc {
 			http.Error(w, "fallo al codificar en json", http.StatusInternalServerError)
 		}
 		hc.BD.Memoria[auto.Ref] = auto
+		w.WriteHeader(http.StatusCreated)
+	})
+}
+
+func (hc *HandlerAutos) ActualizarAuto() http.HandlerFunc {
+	/*
+		Función de actualización de cantidad de autos disponibles en stock.
+	*/
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ref := mux.Vars(r)["ref"]
+		if ref == "" {
+			http.Error(w, "referencia no valida", http.StatusBadRequest)
+			return
+		}
+		infoCar, ok := hc.BD.Memoria[ref]
+		if !ok {
+			http.Error(w, "no se encuentra informacion para esa referencia", http.StatusNotFound)
+			return
+		}
+		quantity, _ := strconv.Atoi(mux.Vars(r)["quantity"])
+		infoCar.Quantity = quantity
+		hc.BD.Memoria[infoCar.Ref] = infoCar
 		w.WriteHeader(http.StatusCreated)
 	})
 }
