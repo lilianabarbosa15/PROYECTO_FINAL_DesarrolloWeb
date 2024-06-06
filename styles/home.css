@@ -104,6 +104,7 @@ body{ height: 100vh;
 .buscador{
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     height: 60px;
     width: auto;
     border-radius: 20px;
