@@ -18,11 +18,11 @@ func NewBaseDatosReservas() *BaseDatosReservas {
 			"Lau153": {
 				IdUser: "Lau153",
 				Details: map[string]struct {
-					Total          int  "json: \"total\""
-					Days           int  "json: \"days\""
-					LifeInsurance  bool "json: \"lifeinsurance\""
-					RoadAssistance bool "json: \"roadassistance\""
-					BabySeat       bool "json: \"babyseat\""
+					Total          int  "json: \"total\" db: \"total\""
+					Days           int  "json: \"days\" db: \"days\""
+					LifeInsurance  bool "json: \"lifeinsurance\" db: \"lifeinsurance\""
+					RoadAssistance bool "json: \"roadassistance\" db: \"roadassistance\""
+					BabySeat       bool "json: \"babyseat\" db: \"babyseat\""
 				}{
 					"Ref0001": {
 						Total:          30,
