@@ -4,7 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="index.css" />
-    <script src="https://kit.fontawesome.com/ea43250ec2.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="module" src="./scripts/login.js" defer></script>
+    
+ 
+
     <title>RentaCar</title>
   </head>
   <body>
@@ -20,16 +25,22 @@
               type="text"
               placeholder="Ingresa tu usuario"
               name="usuario"
+              id="usuario"
             />
+            
           </div>
+          <span class="error-message" id="error-usuario"></span>
           <div class="form__field">
             <label for="">Contraseña</label>
             <input
               type="password"
               placeholder="Ingresa tu contraseña"
               name="password"
+              id="password"
             />
+            
           </div>
+          <span class="error-message" id="error-password"></span>
           <button type="submit">Inicia Sesión</button>
         </form>
         <p>
@@ -39,5 +50,6 @@
         </p>
       </section>
     </main>
+
   </body>
 </html>

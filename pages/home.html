@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renta Car</title>
+    <link rel="stylesheet" href="/styles/home.css" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://kit.fontawesome.com/ea43250ec2.js" crossorigin="anonymous"></script>
+    <script type="module" src="../scripts/home.js" defer></script>
+</head>
+
+<body>
+    <aside class="asideHome">
+        <div class="logo">
+            <i class="fa-solid fa-car-on"></i>
+            <h1> Renta Car </h1>
+        </div>
+
+        <p>Hola <span class="nameUser"> Usuario </span>, explora las siguientes opciones </p>
+        <nav class="menu">
+            <ul>
+
+                <li class="options">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <a href="#">Reservar Autos</a>
+                </li>
+
+                <li class="options">
+                    <i class="fa-solid fa-key"></i>
+                    <a href="#">Autos Alquilados</a>
+                </li>
+                <li class="options">
+                    <i class="fa-solid fa-person-walking-luggage"></i>
+                    <a href="./pages/Acerca.html">Contactenos</a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+    <main class="mainHome">
+        <section class="sectionBusqueda">
+            <h1>Reserva tu Auto</h1>
+            <p>Encuentra miles de opciones en un solo lugar</p>
+            <div class="buscador">
+                <input type="text" placeholder="Busqueda por tipo" name="wordsearch" id="wordsearch" />
+    
+                <nav>
+                    <ul>
+                        <li class="options"><a href="#">Transmisión</a></li>
+                        <li class="options"><a href="#">Combustible</a></li>
+                        <li class="options"><a href="#">Modelo</a></li>
+                        <li class="options"><a href="#">Precio</a></li>
+                        <li class="options"><a href="#">Ninguno</a></li>
+
+                    </ul>
+                </nav>
+                
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+
+            </div>
+        </section>
+    </main>
+
+</body>
+
+</html>

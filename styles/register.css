@@ -6,16 +6,18 @@
     margin: 0;
     padding: 0;
 }
-body{ height: 100vh; width: 100%}
-main{
-    
+body{     height: 100%;
     width: 100%;
-    display:flex;
+}
+main{
+    width: 100%;
+    display: flex;
     flex-direction: row;
 }
 
 .parteIzquierda , .parteDerecha{
     width: 50%;
+  
    
 }
 .parteIzquierda{
@@ -53,7 +55,14 @@ main{
     width: 40vw;
 
 }
+.error-message{
+    font-family: 'Catamaran',serif;
+    margin-top: 0.2em;
+    font-size: small;
+    font-weight: bolder;
+    color: #8e0409;
 
+}
 .form__field{
     margin-top: 0.5em;
     background-color: white;
@@ -81,7 +90,7 @@ main{
 }
 
 #form{
-    height: 72vh;
+    height: max-content;
     width: 36vw;
     display: flex;
     flex-direction: column;

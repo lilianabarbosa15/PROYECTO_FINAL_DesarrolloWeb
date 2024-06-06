@@ -92,6 +92,15 @@ main p{
     flex-direction: column;
     align-items: center;
 }
+
+.error-message{
+    font-family: 'Catamaran',serif;
+    margin-top: 0.4em;
+    font-size: small;
+    font-weight: bolder;
+    color: #8e0409;
+
+}
 #contenedorLogin button{
     margin-top: 2em;
     width: 30vw;
