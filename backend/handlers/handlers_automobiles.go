@@ -1,5 +1,6 @@
 package handlers
 
+/*
 import (
 	"encoding/json"
 	"io"
@@ -12,8 +13,8 @@ import (
 )
 
 /*
-	Funciones encargadas de implementar las funciones relacionadas a la base de datos de los autos
-*/
+	Funciones encargadas de atender las solicitudes relacionadas a la base de datos de los autos
+//
 
 type HandlerAutos struct {
 	BD *repository.BaseDatosAutomobiles
@@ -28,7 +29,7 @@ func NewHandlerAutos(bd *repository.BaseDatosAutomobiles) *HandlerAutos {
 func (hc *HandlerAutos) ListarAutos() http.HandlerFunc {
 	/*
 		Función que retorna toda la información de la base de datos de autos.
-	*/
+	//
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		autos := []models.Automobile{}
 		for _, auto := range hc.BD.Memoria {
@@ -53,7 +54,7 @@ func (hc *HandlerAutos) TraerAutos() http.HandlerFunc {
 		carro en stock), price (costo de renta del carro por día), seats
 		(capacidad de personas que soporta el carro), brand (marca del carro en
 		stock)
-	*/
+	//
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		filter := mux.Vars(r)["filter"]
 		kind := mux.Vars(r)["kind"]
@@ -108,7 +109,7 @@ func (hc *HandlerAutos) NuevoAuto() http.HandlerFunc {
 	/*
 		Función de registro de stock, permite crear autos en la base de
 		datos de automobiles.
-	*/
+	//
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
@@ -127,7 +128,7 @@ func (hc *HandlerAutos) NuevoAuto() http.HandlerFunc {
 func (hc *HandlerAutos) ActualizarAuto() http.HandlerFunc {
 	/*
 		Función de actualización de cantidad de autos disponibles en stock.
-	*/
+	//
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ref := mux.Vars(r)["ref"]
 		if ref == "" {
@@ -145,3 +146,4 @@ func (hc *HandlerAutos) ActualizarAuto() http.HandlerFunc {
 		w.WriteHeader(http.StatusCreated)
 	})
 }
+*/

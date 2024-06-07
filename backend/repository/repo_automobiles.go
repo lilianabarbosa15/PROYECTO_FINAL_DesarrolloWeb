@@ -1,5 +1,6 @@
 package repository
 
+/*
 import (
 	models "github.com/lilianabarbosa15/PROYECTO_FINAL_DesarrolloWeb/models"
 )
@@ -69,3 +70,4 @@ func NewBaseDatosAutomobiles() *BaseDatosAutomobiles {
 		},
 	}
 }
+*/

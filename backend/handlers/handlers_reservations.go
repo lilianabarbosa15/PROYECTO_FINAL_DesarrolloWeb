@@ -1,5 +1,6 @@
 package handlers
 
+/*
 import (
 	"encoding/json"
 	"fmt"
@@ -12,8 +13,8 @@ import (
 )
 
 /*
-	Funciones encargadas de implementar las funciones relacionadas a la base de datos de las reservas
-*/
+	Funciones encargadas de atender las solicitudes relacionadas a la base de datos de las reservas
+//
 
 type HandlerReservas struct {
 	BD *repository.BaseDatosReservas
@@ -28,7 +29,7 @@ func NewHandlerReservas(bd *repository.BaseDatosReservas) *HandlerReservas {
 func (hc *HandlerReservas) ListarReservas() http.HandlerFunc {
 	/*
 		Función que retorna toda la información de la base de datos de usuarios.
-	*/
+	//
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		reservas := []models.Reserva{}
 		for _, reserva := range hc.BD.Memoria {
@@ -48,7 +49,7 @@ func (hc *HandlerReservas) NuevaReserva() http.HandlerFunc {
 	/*
 		Función que se encarga de crear una nueva reserva, asociada a cierto
 		usuario en especifico.
-	*/
+	//
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
@@ -68,7 +69,7 @@ func (hc *HandlerReservas) BorrarReserva() http.HandlerFunc {
 	/*
 		Función que se encarga de borrar una reserva existente, asociada a cierto
 		usuario en especifico.
-	*/
+	//
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
@@ -88,7 +89,7 @@ func (hc *HandlerReservas) ActualizarReserva() http.HandlerFunc {
 	/*
 		Función que se encarga de actualizar el estado de los detalles de
 		cierto de la reserva de cierto usuario en especifico.
-	*/
+	//
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		change := mux.Vars(r)["change"]
 		body, err := io.ReadAll(r.Body)
@@ -122,3 +123,4 @@ func (hc *HandlerReservas) ActualizarReserva() http.HandlerFunc {
 		w.WriteHeader(http.StatusCreated)
 	})
 }
+*/

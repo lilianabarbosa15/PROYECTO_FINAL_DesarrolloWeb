@@ -1,5 +1,6 @@
 package repository
 
+/*
 import (
 	models "github.com/lilianabarbosa15/PROYECTO_FINAL_DesarrolloWeb/models"
 )
@@ -23,10 +24,10 @@ func NewBaseDatosUsers() *BaseDatosUsers {
 			},
 			"Lily1526": {
 				Usu:      "Lily1526",
-				Name:     "Lily Vetancur",
+				Name:     "Lily Betancur",
 				Email:    "lily_vetancur@hotmail.com",
 				Password: "1234",
 			},
 		},
 	}
-}
+}*/

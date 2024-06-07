@@ -1,48 +1,48 @@
 package handlers
 
 import (
-	"encoding/json"
-	"io"
+	"fmt"
+	_ "io"
+	"log"
 	"net/http"
 
-	"github.com/gorilla/mux"
-	models "github.com/lilianabarbosa15/PROYECTO_FINAL_DesarrolloWeb/models"
-	repository "github.com/lilianabarbosa15/PROYECTO_FINAL_DesarrolloWeb/repository"
+	_ "github.com/gorilla/mux"
+	"github.com/lilianabarbosa15/PROYECTO_FINAL_DesarrolloWeb/controllers"
 )
 
 /*
-	Funciones encargadas de implementar las funciones relacionadas a la base de datos de los usuarios
+	Funciones encargadas de atender las solicitudes relacionadas a la base de datos de los usuarios
 */
 
 type HandlerUsuarios struct {
-	BD *repository.BaseDatosUsers
+	controller *controllers.UserController // *repository.BaseDatosUsers
 }
 
-func NewHandlerUsuarios(bd *repository.BaseDatosUsers) *HandlerUsuarios {
-	return &HandlerUsuarios{
-		BD: bd,
+func NewHandlerUsuarios(controller *controllers.UserController) (*HandlerUsuarios, error) { // *repository.BaseDatosUsers) *HandlerUsuarios {
+	if controller == nil {
+		return nil, fmt.Errorf("para instanciar un handler es necesario un controllador no nulo")
 	}
+	return &HandlerUsuarios{
+		controller: controller,
+	}, nil
 }
 
-func (hc *HandlerUsuarios) ListarUsuarios() http.HandlerFunc {
+func (h *HandlerUsuarios) ListarUsuarios(writer http.ResponseWriter, req *http.Request) { // http.HandlerFunc {
 	/*
-		Función que retorna toda la información de la base de datos de usuarios.
+		Retorna toda la información de la base de datos de usuarios.
 	*/
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		users := []models.User{}
-		for _, user := range hc.BD.Memoria {
-			users = append(users, user)
-		}
-		jsonUsu, err := json.Marshal(users)
-		if err != nil {
-			http.Error(w, "fallo al comunicar en json", http.StatusInternalServerError)
-		}
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(jsonUsu)
-	})
+	usuarios, err := h.controller.ListarUsuarios(100, 0)
+	if err != nil {
+		log.Printf("fallo al leer usuarios, con error: %s", err.Error())
+		http.Error(writer, "fallo al leer los usuarios", http.StatusInternalServerError)
+		return
+	}
+	writer.Header().Set("Content-Type", "application/json")
+	writer.WriteHeader(http.StatusOK)
+	writer.Write(usuarios)
 }
 
+/*
 func (hc *HandlerUsuarios) ActualizarUsuario() http.HandlerFunc {
 	/*
 		Función de registro, permite crear nuevos usuarios y/o actualizar la información
@@ -52,7 +52,7 @@ func (hc *HandlerUsuarios) ActualizarUsuario() http.HandlerFunc {
 		Automobiles (int, número de automobiles que el usuario ha rentado)
 		Types_cars  ([]string, slice con la referencia de cada uno de los carros prestados)
 		Debts (int, deuda del usuario)
-	*/
+	//
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		change := mux.Vars(r)["change"]
 		body, err := io.ReadAll(r.Body)
@@ -78,7 +78,7 @@ func (hc *HandlerUsuarios) ActualizarUsuario() http.HandlerFunc {
 func (hc *HandlerUsuarios) TraerUsuario() http.HandlerFunc {
 	/*
 		Función de validación, permite retornar información especifica (toda) de un usuario.
-	*/
+	//
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		usu := mux.Vars(r)["usu"]
 		if usu == "" {
@@ -100,3 +100,4 @@ func (hc *HandlerUsuarios) TraerUsuario() http.HandlerFunc {
 		w.Write(payload)
 	})
 }
+*/
