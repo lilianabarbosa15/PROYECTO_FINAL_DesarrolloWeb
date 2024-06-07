@@ -8,6 +8,8 @@ CREATE TABLE IF NOT EXISTS users(
 INSERT INTO users 
 (usu, name, email, password) VALUES
 ('lilo', 'Laura', 'lau.gomez@gmail.com', '15647k'),
+('Lau153','Laura Gomez','lau.gomez@gmail.com','15647k'),    ---------
+('Lily1526','Lily Betancur','lily_vetancur@hotmail.com','1234'),
 ('li6lo2','Lily Betancur1', 'lily_betancur@hotmail.com', '1234'),
 ('l5ilo2','Lily Betanc2ur', 'lily_betancur@hotmail.com', '1234'),
 ('lilo42','ily Betancu3r', 'lily_betancur@hotmail.com', '1234'),

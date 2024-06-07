@@ -65,7 +65,7 @@ func main() {
 
 	/* rutas a los endpoints de la API */
 	router.Handle("/users", http.HandlerFunc(handler_user.ListarUsuarios)).Methods(http.MethodGet)
-	//router.Handle("/users", http.HandlerFunc(handler_user.CrearUsuario)).Methods(http.MethodPost)
+	router.Handle("/users", http.HandlerFunc(handler_user.CrearUsuario)).Methods(http.MethodPost)
 	//router.Handle("/posts/{id}", http.HandlerFunc(handler_user.TraerComentario)).Methods(http.MethodGet)
 	//router.Handle("/posts/{id}", http.HandlerFunc(handler_user.ActualizarComentario)).Methods(http.MethodPatch)
 	//router.Handle("/posts/{id}", http.HandlerFunc(handler_user.EliminarComentario)).Methods(http.MethodDelete)

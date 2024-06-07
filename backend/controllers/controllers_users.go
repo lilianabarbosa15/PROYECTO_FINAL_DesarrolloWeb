@@ -16,7 +16,7 @@ var (
 	//deleteQuery     = "DELETE FROM comentarios WHERE id=$1;"
 	//selectQuery     = "SELECT id, time, comment, reactions FROM comentarios WHERE id=$1;"
 	listUserQuery   = "SELECT usu, name, email, password FROM users limit $1 offset $2"
-	createUserQuery = "INSERT INTO users (usu, name, email, password) VALUES (:usu, :name, :email, :password) returning id;" ////////////////////
+	createUserQuery = "INSERT INTO users (usu, name, email, password) VALUES (:usu, :name, :email, :password);" // return usu;" ////////////////////
 )
 
 type UserController struct {
@@ -38,14 +38,14 @@ func (c *UserController) ListarUsuarios(limit, offset int) ([]byte, error) {
 	fmt.Println("context.TODO(): ", context.TODO())
 	usuarios, _, err := c.repo.List(context.TODO(), listUserQuery, limit, offset)
 	if err != nil {
-		log.Printf("fallo al leer comentarios, con error: %s", err.Error())
-		return nil, fmt.Errorf("fallo al leer comentarios, con error: %s", err.Error())
+		log.Printf("fallo al leer usuarios, con error: %s", err.Error())
+		return nil, fmt.Errorf("fallo al leer usuarios, con error: %s", err.Error())
 	}
 
 	jsonUsuarios, err := json.Marshal(usuarios)
 	if err != nil {
-		log.Printf("fallo al leer comentarios, con error: %s", err.Error())
-		return nil, fmt.Errorf("fallo al leer comentarios, con error: %s", err.Error())
+		log.Printf("fallo al leer usuarios, con error: %s", err.Error())
+		return nil, fmt.Errorf("fallo al leer usuarios, con error: %s", err.Error())
 	}
 	return jsonUsuarios, nil
 }
@@ -66,12 +66,12 @@ func (c *UserController) CrearUsuario(reqBody []byte) (string, error) {
 	}
 
 	//DEVUELVE ID NUMERICO///////////////////////////////////////////////////////////////////////////////////////////
-	nuevoId, err := c.repo.Create(context.TODO(), createUserQuery, valoresColumnasNuevoUsuario)
-	if err != nil {
-		log.Printf("fallo al crear un nuevo comentario, con error: %s", err.Error())
-		return "", fmt.Errorf("fallo al crear un nuevo comentario, con error: %s", err.Error())
+	er := c.repo.Create(context.TODO(), createUserQuery, valoresColumnasNuevoUsuario)
+	if er != nil {
+		log.Printf("fallo al crear un nuevo comentario, con error: %s", er.Error())
+		return nuevoUsuario.Usu, fmt.Errorf("fallo al crear un nuevo comentario, con error: %s", er.Error())
 	}
-	return nuevoId, nil
+	return nuevoUsuario.Usu, nil
 }
 
 /*func (c *Controller) ActualizarUnComentario(reqBody []byte, id string) error {

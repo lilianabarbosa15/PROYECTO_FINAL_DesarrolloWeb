@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"io"
 	_ "io"
 	"log"
 	"net/http"
@@ -40,6 +41,29 @@ func (h *HandlerUsuarios) ListarUsuarios(writer http.ResponseWriter, req *http.R
 	writer.Header().Set("Content-Type", "application/json")
 	writer.WriteHeader(http.StatusOK)
 	writer.Write(usuarios)
+}
+
+func (h *HandlerUsuarios) CrearUsuario(writer http.ResponseWriter, req *http.Request) { // http.HandlerFunc {
+	/*
+		.
+	*/
+	body, err := io.ReadAll(req.Body)
+	if err != nil {
+		log.Printf("fallo al crear un nuevo comentario, con error: %s", err.Error())
+		http.Error(writer, "fallo al crear un nuevo comentario", http.StatusBadRequest)
+		return
+	}
+	defer req.Body.Close()
+
+	nuevoId, err := h.controller.CrearUsuario(body)
+	if err != nil {
+		log.Println("fallo al crear un nuevo comentario, con error:", err.Error())
+		http.Error(writer, "fallo al crear un nuevo comentario", http.StatusInternalServerError)
+		return
+	}
+
+	writer.WriteHeader(http.StatusCreated)
+	writer.Write([]byte(nuevoId)) //[]byte(fmt.Sprintf("id nuevo comentario: %d", nuevoId)))
 }
 
 /*

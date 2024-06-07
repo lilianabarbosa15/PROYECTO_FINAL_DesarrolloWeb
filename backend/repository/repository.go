@@ -14,7 +14,7 @@ var _ Repository[any] = &repository[any]{}
 
 type Repository[Entity any] interface {
 	// Inserts a new item in a single table
-	Create(ctx context.Context, query string, queryParams map[string]any) (string, error)
+	Create(ctx context.Context, query string, queryParams map[string]any) error
 	// Fetches an item from a single table
 	Read(ctx context.Context, query, resourceID string) (*Entity, error)
 	// Fetches all items from a single table using limit and offset as parameters for results pagination
@@ -39,18 +39,18 @@ func NewRepository[Entity any](conn *sqlx.DB) (*repository[Entity], error) {
 	}, nil
 }
 
-func (p *repository[Entity]) Create(ctx context.Context, query string, params map[string]any) (string, error) {
-	var lastInsertId string
-	rows, err := p.connection.NamedQueryContext(ctx, query, params)
+func (p *repository[Entity]) Create(ctx context.Context, query string, params map[string]any) error {
+	//var lastInsertId int64
+	_, err := p.connection.NamedQueryContext(ctx, query, params)
 	if err != nil {
-		return lastInsertId, fmt.Errorf("insert failed, err: %w", err)
+		return fmt.Errorf("insert failed, err: %w", err)
 	}
-	for rows.Next() {
+	/*for rows.Next() {
 		if err := rows.Scan(&lastInsertId); err != nil {
-			return lastInsertId, fmt.Errorf("insert failed, err: %w", err)
+			return fmt.Errorf("insert failed, err: %w", err)
 		}
-	}
-	return lastInsertId, nil
+	}*/
+	return nil
 }
 
 func (p *repository[Entity]) Read(ctx context.Context, query, ID string) (*Entity, error) {
