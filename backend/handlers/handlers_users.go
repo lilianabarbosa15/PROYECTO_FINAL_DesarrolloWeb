@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	_ "github.com/gorilla/mux"
 	"github.com/lilianabarbosa15/PROYECTO_FINAL_DesarrolloWeb/controllers"
 )
@@ -49,34 +50,50 @@ func (h *HandlerUsuarios) CrearUsuario(writer http.ResponseWriter, req *http.Req
 	*/
 	body, err := io.ReadAll(req.Body)
 	if err != nil {
-		log.Printf("fallo al crear un nuevo comentario, con error: %s", err.Error())
-		http.Error(writer, "fallo al crear un nuevo comentario", http.StatusBadRequest)
+		log.Printf("fallo al crear un nuevo usuario, con error: %s", err.Error())
+		http.Error(writer, "fallo al crear un nuevo usuario", http.StatusBadRequest)
 		return
 	}
 	defer req.Body.Close()
-
 	nuevoId, err := h.controller.CrearUsuario(body)
 	if err != nil {
-		log.Println("fallo al crear un nuevo comentario, con error:", err.Error())
-		http.Error(writer, "fallo al crear un nuevo comentario", http.StatusInternalServerError)
+		log.Println("fallo al crear un nuevo usuario, con error:", err.Error())
+		http.Error(writer, "fallo al crear un nuevo usuario", http.StatusInternalServerError)
 		return
 	}
-
 	writer.WriteHeader(http.StatusCreated)
 	writer.Write([]byte(nuevoId)) //[]byte(fmt.Sprintf("id nuevo comentario: %d", nuevoId)))
 }
 
-/*
-func (hc *HandlerUsuarios) ActualizarUsuario() http.HandlerFunc {
+func (h *HandlerUsuarios) ActualizarUsuario(writer http.ResponseWriter, req *http.Request) {
 	/*
-		Función de registro, permite crear nuevos usuarios y/o actualizar la información
+		Función que permite actualizar la información
 		asociada a un usuario existente en la base de datos de usuarios.
 		Usu         (string, nombre del usuario)
 		Password    (string, contraseña del usuario)
 		Automobiles (int, número de automobiles que el usuario ha rentado)
 		Types_cars  ([]string, slice con la referencia de cada uno de los carros prestados)
 		Debts (int, deuda del usuario)
-	//
+	*/
+	vars := mux.Vars(req)
+	usu := vars["usu"]
+	body, err := io.ReadAll(req.Body)
+	if err != nil {
+		log.Printf("fallo al actualizar un usuario, con error: %s", err.Error())
+		http.Error(writer, fmt.Sprintf("fallo al actualizar un usuario, con error: %s", err.Error()), http.StatusBadRequest)
+		return
+	}
+	defer req.Body.Close()
+	err = h.controller.ActualizarUnUsuario(body, usu)
+	if err != nil {
+		log.Printf("fallo al actualizar un usuario, con error: %s", err.Error())
+		http.Error(writer, fmt.Sprintf("fallo al actualizar un usuario, con error: %s", err.Error()), http.StatusInternalServerError)
+		return
+	}
+	writer.WriteHeader(http.StatusOK)
+}
+
+/*
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		change := mux.Vars(r)["change"]
 		body, err := io.ReadAll(r.Body)
@@ -97,8 +114,9 @@ func (hc *HandlerUsuarios) ActualizarUsuario() http.HandlerFunc {
 		}
 		w.WriteHeader(http.StatusCreated)
 	})
-}
+}*/
 
+/*
 func (hc *HandlerUsuarios) TraerUsuario() http.HandlerFunc {
 	/*
 		Función de validación, permite retornar información especifica (toda) de un usuario.
