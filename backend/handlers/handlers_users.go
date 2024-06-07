@@ -46,7 +46,7 @@ func (h *HandlerUsuarios) ListarUsuarios(writer http.ResponseWriter, req *http.R
 
 func (h *HandlerUsuarios) CrearUsuario(writer http.ResponseWriter, req *http.Request) { // http.HandlerFunc {
 	/*
-		Valida los usuarios nuevos a través de POST.
+		Crea los usuarios nuevos a través de POST.
 	*/
 	body, err := io.ReadAll(req.Body)
 	if err != nil {

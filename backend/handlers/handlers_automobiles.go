@@ -1,149 +1,108 @@
 package handlers
 
-/*
 import (
-	"encoding/json"
+	"fmt"
 	"io"
+	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/gorilla/mux"
-	models "github.com/lilianabarbosa15/PROYECTO_FINAL_DesarrolloWeb/models"
-	repository "github.com/lilianabarbosa15/PROYECTO_FINAL_DesarrolloWeb/repository"
+	"github.com/lilianabarbosa15/PROYECTO_FINAL_DesarrolloWeb/controllers"
 )
 
 /*
-	Funciones encargadas de atender las solicitudes relacionadas a la base de datos de los autos
-//
-
-type HandlerAutos struct {
-	BD *repository.BaseDatosAutomobiles
-}
-
-func NewHandlerAutos(bd *repository.BaseDatosAutomobiles) *HandlerAutos {
-	return &HandlerAutos{
-		BD: bd,
-	}
-}
-
-func (hc *HandlerAutos) ListarAutos() http.HandlerFunc {
-	/*
-		Función que retorna toda la información de la base de datos de autos.
-	//
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		autos := []models.Automobile{}
-		for _, auto := range hc.BD.Memoria {
-			autos = append(autos, auto)
-		}
-		jsonCars, err := json.Marshal(autos)
-		if err != nil {
-			http.Error(w, "fallo al comunicar en json", http.StatusInternalServerError)
-		}
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(jsonCars)
-	})
-}
-
-func (hc *HandlerAutos) TraerAutos() http.HandlerFunc {
-	/*
-		Función que retorna todos los autos disponibles bajo cierta categoría.
-		La categoría puede ser: type_transmission (manual ó automatico),
-		type_fuel (gasolina, diesel ó electrico), year (año de fabricación del
-		modelo del carro), model (modelo del carro en stock), color (color del
-		carro en stock), price (costo de renta del carro por día), seats
-		(capacidad de personas que soporta el carro), brand (marca del carro en
-		stock)
-	//
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		filter := mux.Vars(r)["filter"]
-		kind := mux.Vars(r)["kind"]
-		kind_int, _ := strconv.Atoi(kind)
-		autos := []models.Automobile{}
-		for _, auto := range hc.BD.Memoria {
-			if filter == "type_transmission" {
-				if auto.Type_transmission == kind {
-					autos = append(autos, auto)
-				}
-			} else if filter == "type_fuel" {
-				if auto.Type_fuel == kind {
-					autos = append(autos, auto)
-				}
-			} else if filter == "year" {
-				if strconv.Itoa(auto.Year) == kind {
-					autos = append(autos, auto)
-				}
-			} else if filter == "model" {
-				if auto.Model == kind {
-					autos = append(autos, auto)
-				}
-			} else if filter == "color" {
-				if auto.Color == kind {
-					autos = append(autos, auto)
-				}
-			} else if filter == "price" {
-				if auto.Price <= kind_int {
-					autos = append(autos, auto)
-				}
-			} else if filter == "seats" {
-				if auto.Seats >= kind_int {
-					autos = append(autos, auto)
-				}
-			} else if filter == "brand" {
-				if auto.Brand == kind {
-					autos = append(autos, auto)
-				}
-			}
-		}
-		jsonCars, err := json.Marshal(autos)
-		if err != nil {
-			http.Error(w, "fallo al comunicar en json", http.StatusInternalServerError)
-		}
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(jsonCars)
-	})
-}
-
-func (hc *HandlerAutos) NuevoAuto() http.HandlerFunc {
-	/*
-		Función de registro de stock, permite crear autos en la base de
-		datos de automobiles.
-	//
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		body, err := io.ReadAll(r.Body)
-		if err != nil {
-			http.Error(w, "fallo en la peticion", http.StatusBadRequest)
-		}
-		auto := models.Automobile{}
-		err = json.Unmarshal(body, &auto)
-		if err != nil {
-			http.Error(w, "fallo al codificar en json", http.StatusInternalServerError)
-		}
-		hc.BD.Memoria[auto.Ref] = auto
-		w.WriteHeader(http.StatusCreated)
-	})
-}
-
-func (hc *HandlerAutos) ActualizarAuto() http.HandlerFunc {
-	/*
-		Función de actualización de cantidad de autos disponibles en stock.
-	//
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ref := mux.Vars(r)["ref"]
-		if ref == "" {
-			http.Error(w, "referencia no valida", http.StatusBadRequest)
-			return
-		}
-		infoCar, ok := hc.BD.Memoria[ref]
-		if !ok {
-			http.Error(w, "no se encuentra informacion para esa referencia", http.StatusNotFound)
-			return
-		}
-		quantity, _ := strconv.Atoi(mux.Vars(r)["quantity"])
-		infoCar.Quantity = quantity
-		hc.BD.Memoria[infoCar.Ref] = infoCar
-		w.WriteHeader(http.StatusCreated)
-	})
-}
+	Funciones encargadas de atender las solicitudes relacionadas a la base de datos de los usuarios
 */
+
+type HandlerAutomobiles struct {
+	controller_auto *controllers.AutoController
+}
+
+func NewHandlerAutomobiles(controller_auto *controllers.AutoController) (*HandlerAutomobiles, error) {
+	if controller_auto == nil {
+		return nil, fmt.Errorf("para instanciar un handler es necesario un controllador no nulo")
+	}
+	return &HandlerAutomobiles{
+		controller_auto: controller_auto,
+	}, nil
+}
+
+func (h *HandlerAutomobiles) ListarAutos(writer http.ResponseWriter, req *http.Request) {
+	/*
+		Retorna toda la información de la base de datos de automobiles.
+	*/
+	autos, err := h.controller_auto.ListarAutos(100, 0)
+	if err != nil {
+		log.Printf("fallo al leer autos, con error: %s", err.Error())
+		http.Error(writer, "fallo al leer los autos", http.StatusInternalServerError)
+		return
+	}
+	writer.Header().Set("Content-Type", "application/json")
+	writer.WriteHeader(http.StatusOK)
+	writer.Write(autos)
+}
+
+func (h *HandlerAutomobiles) NuevoAuto(writer http.ResponseWriter, req *http.Request) {
+	/*
+		POST
+	*/
+	body, err := io.ReadAll(req.Body)
+	if err != nil {
+		log.Printf("fallo al crear un nuevo auto, con error: %s", err.Error())
+		http.Error(writer, "fallo al crear un auto", http.StatusBadRequest)
+		return
+	}
+	defer req.Body.Close()
+	nuevoId, err := h.controller_auto.CrearAuto(body)
+	if err != nil {
+		log.Println("fallo al crear un auto, con error:", err.Error())
+		http.Error(writer, "fallo al crear un auto", http.StatusInternalServerError)
+		return
+	}
+	writer.WriteHeader(http.StatusCreated)
+	writer.Write([]byte(nuevoId))
+}
+
+func (h *HandlerAutomobiles) TraerAutos(writer http.ResponseWriter, req *http.Request) {
+	/*
+		Realiza un filtrado en la base de datos por categorías como: type_transmission,
+		type_fuel, year, model, color, price, seats y brand. Cuando es por price retorna
+		los menores e iguales al precio elegido mientras que cuando es por asientos
+		retorna los mayores e iguales.
+	*/
+	filter := mux.Vars(req)["filter"]
+	kind := mux.Vars(req)["kind"]
+	fmt.Println("FILTER: ", filter)
+	fmt.Println("KIND: ", kind)
+	autos, err := h.controller_auto.FiltrarAutos(filter, kind, 100, 0) ///subir es limite (1000)
+	if err != nil {
+		log.Printf("fallo al leer autos, con error: %s", err.Error())
+		http.Error(writer, "fallo al leer los autos", http.StatusInternalServerError)
+		return
+	}
+	writer.Header().Set("Content-Type", "application/json")
+	writer.WriteHeader(http.StatusOK)
+	writer.Write([]byte(autos))
+}
+
+func (h *HandlerAutomobiles) ActualizarAuto(writer http.ResponseWriter, req *http.Request) {
+	/*
+		 	Función que permite actualizar la información asociada a un auto existente en
+			la base de datos de automobiles.
+	*/
+	ref := mux.Vars(req)["ref"]
+	body, err := io.ReadAll(req.Body)
+	if err != nil {
+		log.Printf("fallo al actualizar un auto, con error: %s", err.Error())
+		http.Error(writer, fmt.Sprintf("fallo al actualizar un auto, con error: %s", err.Error()), http.StatusBadRequest)
+		return
+	}
+	defer req.Body.Close()
+	err = h.controller_auto.ActualizarUnAuto(body, ref)
+	if err != nil {
+		log.Printf("fallo al actualizar un auto, con error: %s", err.Error())
+		http.Error(writer, fmt.Sprintf("fallo al actualizar un auto, con error: %s", err.Error()), http.StatusInternalServerError)
+		return
+	}
+	writer.WriteHeader(http.StatusOK)
+}

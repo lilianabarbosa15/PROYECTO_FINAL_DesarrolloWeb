@@ -12,8 +12,8 @@ import (
 )
 
 var (
-	updateQuery     = "UPDATE users SET %s WHERE usu=:usu;"
-	selectQuery     = "SELECT usu, name, email, password FROM users WHERE usu=$1;"
+	updateUserQuery = "UPDATE users SET %s WHERE usu=:usu;"
+	selectUserQuery = "SELECT usu, name, email, password FROM users WHERE usu=$1;"
 	listUserQuery   = "SELECT usu, name, email, password FROM users limit $1 offset $2"
 	createUserQuery = "INSERT INTO users (usu, name, email, password) VALUES (:usu, :name, :email, :password);" // return usu;" ////////////////////
 )
@@ -100,11 +100,11 @@ func construirUpdateQuery(nuevosValores map[string]any) string {
 		columnas = append(columnas, fmt.Sprintf("%s=:%s", key, key))
 	}
 	columnasString := strings.Join(columnas, ",")
-	return fmt.Sprintf(updateQuery, columnasString)
+	return fmt.Sprintf(updateUserQuery, columnasString)
 }
 
 func (c *UserController) LeerUnUsuario(usu string) ([]byte, error) {
-	usuario, err := c.repo.Read(context.TODO(), selectQuery, usu)
+	usuario, err := c.repo.Read(context.TODO(), selectUserQuery, usu)
 	if err != nil {
 		log.Printf("fallo al leer un usuario, con error: %s", err.Error())
 		return nil, fmt.Errorf("fallo al leer un usuario, con error: %s", err.Error())
