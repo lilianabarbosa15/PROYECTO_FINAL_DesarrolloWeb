@@ -64,9 +64,14 @@ func main() {
 	router := mux.NewRouter()
 
 	/* rutas a los endpoints de la API */
+	//usuarios:
 	router.Handle("/users", http.HandlerFunc(handler_user.ListarUsuarios)).Methods(http.MethodGet)
 	router.Handle("/users", http.HandlerFunc(handler_user.CrearUsuario)).Methods(http.MethodPost)             //crea nuevo usuario
 	router.Handle("/users/{usu}", http.HandlerFunc(handler_user.ActualizarUsuario)).Methods(http.MethodPatch) //cambiar contraseña y/o reserva
+	router.Handle("/validation/{usu}", http.HandlerFunc(handler_user.TraerUsuario)).Methods(http.MethodGet)   //trae la información de un usuario en especifico
+
+	//autos:
+
 	//router.Handle("/posts/{id}", http.HandlerFunc(handler_user.TraerComentario)).Methods(http.MethodGet)
 	//router.Handle("/posts/{id}", http.HandlerFunc(handler_user.ActualizarComentario)).Methods(http.MethodPatch)
 	//router.Handle("/posts/{id}", http.HandlerFunc(handler_user.EliminarComentario)).Methods(http.MethodDelete)
@@ -96,10 +101,6 @@ func main() {
 	// Se agrega multiplexor y enrutador:
 	mux := mux.NewRouter()
 	//asociar handlers al mux:
-	//usuarios
-	mux.HandleFunc("/users", handler_usu.ListarUsuarios()).Methods("GET")                        /////////////////////////////////////////
-	mux.HandleFunc("/users/{change}/", handler_usu.ActualizarUsuario()).Methods("POST", "PATCH") //crear, cambiar contraseña y/o reserva
-	mux.HandleFunc("/validation/{usu}/", handler_usu.TraerUsuario()).Methods("GET")              //trae la información de un usuario en especifico
 	//autos
 	mux.HandleFunc("/automobiles", handler_car.ListarAutos()).Methods("GET")                       //permite traer toda la información asociada a la base de datos de vehiculos
 	mux.HandleFunc("/automobiles", handler_car.NuevoAuto()).Methods("POST")                        //crea nuevo auto en la base de datos de automobiles

@@ -12,9 +12,8 @@ import (
 )
 
 var (
-	updateQuery = "UPDATE users SET %s WHERE usu=:usu;"
-	//deleteQuery     = "DELETE FROM users WHERE usu=$1;"
-	//selectQuery     = "SELECT id, time, comment, reactions FROM comentarios WHERE id=$1;"
+	updateQuery     = "UPDATE users SET %s WHERE usu=:usu;"
+	selectQuery     = "SELECT usu, name, email, password FROM users WHERE usu=$1;"
 	listUserQuery   = "SELECT usu, name, email, password FROM users limit $1 offset $2"
 	createUserQuery = "INSERT INTO users (usu, name, email, password) VALUES (:usu, :name, :email, :password);" // return usu;" ////////////////////
 )
@@ -54,8 +53,8 @@ func (c *UserController) CrearUsuario(reqBody []byte) (string, error) {
 	nuevoUsuario := &models.User{}
 	err := json.Unmarshal(reqBody, nuevoUsuario)
 	if err != nil {
-		log.Printf("fallo al crear un nuevo comentario, con error: %s", err.Error())
-		return "", fmt.Errorf("fallo al crear un nuevo comentario, con error: %s", err.Error())
+		log.Printf("fallo al crear un nuevo usuario, con error: %s", err.Error())
+		return "", fmt.Errorf("fallo al crear un nuevo usuario, con error: %s", err.Error())
 	}
 
 	valoresColumnasNuevoUsuario := map[string]any{
@@ -66,8 +65,8 @@ func (c *UserController) CrearUsuario(reqBody []byte) (string, error) {
 	}
 	er := c.repo.Create(context.TODO(), createUserQuery, valoresColumnasNuevoUsuario)
 	if er != nil {
-		log.Printf("fallo al crear un nuevo comentario, con error: %s", er.Error())
-		return nuevoUsuario.Usu, fmt.Errorf("fallo al crear un nuevo comentario, con error: %s", er.Error())
+		log.Printf("fallo al crear un nuevo usuario, con error: %s", er.Error())
+		return nuevoUsuario.Usu, fmt.Errorf("fallo al crear un nuevo usuario, con error: %s", er.Error())
 	}
 	return nuevoUsuario.Usu, nil
 }
@@ -77,21 +76,20 @@ func (c *UserController) ActualizarUnUsuario(reqBody []byte, usu string) error {
 	nuevosValoresUsuario := make(map[string]any)
 	err := json.Unmarshal(reqBody, &nuevosValoresUsuario)
 	if err != nil {
-		log.Printf("fallo al actualizar un comentario, con error: %s", err.Error())
-		return fmt.Errorf("fallo al actualizar un comentario, con error: %s", err.Error())
+		log.Printf("fallo al actualizar un usuario, con error: %s", err.Error())
+		return fmt.Errorf("fallo al actualizar un usuario, con error: %s", err.Error())
 	}
 
 	if len(nuevosValoresUsuario) == 0 {
-		log.Printf("fallo al actualizar un comentario, con error: no hay datos")
-		return fmt.Errorf("fallo al actualizar un comentario, con error: no hay datos")
+		log.Printf("fallo al actualizar un usuario, con error: no hay datos")
+		return fmt.Errorf("fallo al actualizar un usuario, con error: no hay datos")
 	}
-
 	query := construirUpdateQuery(nuevosValoresUsuario)
 	nuevosValoresUsuario["usu"] = usu
 	err = c.repo.Update(context.TODO(), query, nuevosValoresUsuario)
 	if err != nil {
-		log.Printf("fallo al actualizar un comentario, con error: %s", err.Error())
-		return fmt.Errorf("fallo al actualizar un comentario, con error: %s", err.Error())
+		log.Printf("fallo al actualizar un usuario, con error: %s", err.Error())
+		return fmt.Errorf("fallo al actualizar un usuario, con error: %s", err.Error())
 	}
 	return nil
 }
@@ -103,4 +101,18 @@ func construirUpdateQuery(nuevosValores map[string]any) string {
 	}
 	columnasString := strings.Join(columnas, ",")
 	return fmt.Sprintf(updateQuery, columnasString)
+}
+
+func (c *UserController) LeerUnUsuario(usu string) ([]byte, error) {
+	usuario, err := c.repo.Read(context.TODO(), selectQuery, usu)
+	if err != nil {
+		log.Printf("fallo al leer un usuario, con error: %s", err.Error())
+		return nil, fmt.Errorf("fallo al leer un usuario, con error: %s", err.Error())
+	}
+	usuarioJson, err := json.Marshal(usuario)
+	if err != nil {
+		log.Printf("fallo al leer un usuario, con error: %s", err.Error())
+		return nil, fmt.Errorf("fallo al leer un usuario, con error: %s", err.Error())
+	}
+	return usuarioJson, nil
 }
