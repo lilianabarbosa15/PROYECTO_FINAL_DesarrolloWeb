@@ -155,7 +155,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 imagen.addEventListener("click", (event) => {
                     event.stopPropagation();
                     const carro = filteredCars.find(carro => carro.Image === imagen.src);
-                    console.log(carro.Image)
+                    document.querySelector(".sectionDetalles").innerHTML = ""; // Clear previous image
+                    document.querySelector(".detallesEspecificos").innerHTML = ""; // Clear previous details
                     insertarImagen(carro.Image);
                     insertarDetallesModal(carro);
                     modal.classList.add("show");
