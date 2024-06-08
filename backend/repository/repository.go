@@ -15,6 +15,7 @@ var _ Repository[any] = &repository[any]{}
 type Repository[Entity any] interface {
 	// Inserts a new item in a single table
 	Create(ctx context.Context, query string, queryParams map[string]any) error
+	Create_id(ctx context.Context, query string, queryParams map[string]any) (int64, error)
 	// Fetches an item from a single table
 	Read(ctx context.Context, query, resourceID string) (*Entity, error)
 	// Fetches all items from a single table using limit and offset as parameters for results pagination
@@ -51,6 +52,20 @@ func (p *repository[Entity]) Create(ctx context.Context, query string, params ma
 		}
 	}*/
 	return nil
+}
+
+func (p *repository[Entity]) Create_id(ctx context.Context, query string, params map[string]any) (int64, error) {
+	lastInsertId := int64(0)
+	rows, err := p.connection.NamedQueryContext(ctx, query, params)
+	if err != nil {
+		return lastInsertId, fmt.Errorf("insert failed, err: %w", err)
+	}
+	for rows.Next() {
+		if err := rows.Scan(&lastInsertId); err != nil {
+			return lastInsertId, fmt.Errorf("insert failed, err: %w", err)
+		}
+	}
+	return lastInsertId, nil
 }
 
 func (p *repository[Entity]) Read(ctx context.Context, query, ID string) (*Entity, error) {

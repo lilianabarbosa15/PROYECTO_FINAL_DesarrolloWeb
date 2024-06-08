@@ -57,7 +57,7 @@ func main() {
 		log.Fatalln("fallo al crear una instancia de handler", err.Error())
 		return
 	}
-	//usuarios:
+	//automobiles:
 	repo_auto, err := repositorio.NewRepository[models.Automobile](db)
 	if err != nil {
 		log.Fatalln("fallo al crear una instancia de repositorio", err.Error())
@@ -73,7 +73,22 @@ func main() {
 		log.Fatalln("fallo al crear una instancia de handler", err.Error())
 		return
 	}
-	//
+	//reservas:
+	repo_reserva, err := repositorio.NewRepository[models.Reserva](db)
+	if err != nil {
+		log.Fatalln("fallo al crear una instancia de repositorio", err.Error())
+		return
+	}
+	controller_reserva, err := controllers.NewReservaController(repo_reserva)
+	if err != nil {
+		log.Fatalln("fallo al crear una instancia de controller", err.Error())
+		return
+	}
+	handler_reservas, err := handlers.NewHandlerReservas(controller_reserva)
+	if err != nil {
+		log.Fatalln("fallo al crear una instancia de handler", err.Error())
+		return
+	}
 
 	/* router (multiplexador) a los endpoints de la API (implementado con el paquete gorilla/mux) */
 	router := mux.NewRouter()
@@ -92,33 +107,11 @@ func main() {
 	router.Handle("/automobiles/{ref}", http.HandlerFunc(handler_auto.ActualizarAuto)).Methods(http.MethodPatch)     //modifica características de cierto auto
 
 	//reservas:
-
-	//router.Handle("/posts/{id}", http.HandlerFunc(handler_user.TraerComentario)).Methods(http.MethodGet)
-	//router.Handle("/posts/{id}", http.HandlerFunc(handler_user.ActualizarComentario)).Methods(http.MethodPatch)
-	//router.Handle("/posts/{id}", http.HandlerFunc(handler_user.EliminarComentario)).Methods(http.MethodDelete)
+	router.Handle("/reservations", http.HandlerFunc(handler_reservas.ListarReservas)).Methods(http.MethodGet)                  //lista todas las reservas que se tienen en la base de datos
+	router.Handle("/reservations", http.HandlerFunc(handler_reservas.NuevaReserva)).Methods(http.MethodPost)                   //crea una nueva reserva desde cero (agregando un nuevo usuario)
+	router.Handle("/reservations/{usu}/{ref}", http.HandlerFunc(handler_reservas.BorrarReserva)).Methods(http.MethodDelete)    //elimina totalmente una reserva de la base de datos
+	router.Handle("/reservations/{usu}/{ref}", http.HandlerFunc(handler_reservas.ActualizarReserva)).Methods(http.MethodPatch) //edita parcialmente los detalles de la reserva de deteminado usuario
 
 	/* servidor escuchando en localhost por el puerto 8080 y entrutando las peticiones con el router */
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
-
-/*
-import (
-	"log"
-	"net/http"
-
-	"github.com/gorilla/mux"
-	handlers "github.com/lilianabarbosa15/PROYECTO_FINAL_DesarrolloWeb/handlers"
-	repository "github.com/lilianabarbosa15/PROYECTO_FINAL_DesarrolloWeb/repository"
-)
-
-func main() {
-	//reservas
-	mux.HandleFunc("/reservations", handler_reservas.ListarReservas()).Methods("GET")               //lista todas las reservas que se tienen en la base de datos
-	mux.HandleFunc("/reservations", handler_reservas.NuevaReserva()).Methods("POST")                //crea una nueva reserva desde cero (agregando un nuevo usuario)
-	mux.HandleFunc("/reservations", handler_reservas.BorrarReserva()).Methods("DELETE")             //elimina totalmente una reserva de la base de datos
-	mux.HandleFunc("/reservations/{change}", handler_reservas.ActualizarReserva()).Methods("PATCH") //edita parcialmente los detalles de la reserva de deteminado usuario
-
-	// Definición de servidor que esté escuchando:
-	log.Fatal(http.ListenAndServe(":8080", mux))
-}
-*/
