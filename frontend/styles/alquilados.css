@@ -74,7 +74,114 @@ body{ height: 100%;
     background-color: #f19e82aa;
 }
 .seccionPrincipal{
-    background-color: #c0616433;
+    
     width: 80vw;
     height: 100vh;
+}
+.seccionPrincipal h1{
+    background-color: #c0616433;
+    height: 10vh;
+    font-family: 'Geologica',sans-serif;
+    font-size: 30px;
+    text-align: center;
+    padding-top: 20px;
+    color:#671811;
+}
+.seccionPrincipal{
+    display: flex;
+    flex-direction: column;
+
+    
+}
+.Reservas{
+    display: flex;
+    margin-top: 7em;
+    margin-left: 5em;
+    width: 340px;
+    height: 365px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.reserva {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+.reserva  .openModal{
+    margin-left: 1em;
+    color: white;
+    font-weight: bolder;
+    height: 5vh;
+    align-self: center;
+    border: none;
+    width: 160px;
+    border-radius: 7px;
+    background-color: rgb(240, 130, 130);
+}
+
+.encabezado {
+    font-family: 'Catamaran', serif;
+    font-size: 16px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    color:black;
+}
+
+.Reservas h6{
+    font-family: 'Catamaran', serif;
+    font-size: 14px;
+    color:#c06164;
+    margin: 2px 18px;
+}
+
+.Reservas #openModal{
+    color:white;
+    background-color: #c06164;
+    font-family: 'Catamaran', serif;
+    font-size: 14px;
+    height: 30px;
+    border: none;
+    width: 160px;
+    align-self: center;
+    font-weight: bold;
+}
+.Reservas #openModal:hover{
+    cursor: pointer;
+}
+.hidden {
+    display: none;
+}
+.show {
+    display: flex;
+}
+.modalCart{
+  
+  position: fixed;
+  top:0;
+  left: 0;
+  width: 100%;
+  height:100%;
+  background-color: #05050549;
+    
+}
+
+.modalCart .contenidoModal {
+    display: flex;
+    flex-direction: column;
+    position:relative;
+    top:1em;
+    left: 11em;
+    background-color: white;
+    width: 70vw;
+   
+}
+
+.contenidoModal{
+    display: flex;
+    flex-direction: column;
+    font-family: 'Catamaran', serif;
+    font-size: 20px;
+    padding: 20px 20px;
 }

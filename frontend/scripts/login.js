@@ -11,7 +11,7 @@ let user;
 
 
 const validateUser = (usuarios, username, password) => {
-    return usuarios.find(user => user.Usu === username && user.Password === password);
+    return usuarios.find(user => user.username === username && user.password === password);
 };
 document.addEventListener("DOMContentLoaded", async () => {
     
@@ -45,7 +45,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                     icon: 'success'
                   });
                 localStorage.setItem("Usu", JSON.stringify(entradaNombre.value));
-                location.href= '../pages/home.html';
+                location.href= "../frontend/pages/home.html";
+
                 
             } else {
                 Swal.fire({

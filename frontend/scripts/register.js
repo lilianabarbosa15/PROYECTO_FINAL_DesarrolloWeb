@@ -51,10 +51,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (nameRegExp.test(entradaNombre.value.trim()) && emailRegExp.test(entradaEmail.value.trim()) && userRegExp.test(entradaNombreUsuario.value.trim()) && passwordRegExp.test(entradaContraseña.value.trim())) {
             const newUser = {
-                Usu: entradaNombreUsuario.value.trim(),
-                Name: entradaNombre.value.trim(),
-                Email: entradaEmail.value.trim(),
-                Password: entradaContraseña.value.trim()
+                username: entradaNombreUsuario.value.trim(),
+                name: entradaNombre.value.trim(),
+                email: entradaEmail.value.trim(),
+                password: entradaContraseña.value.trim()
             };
 
             try {

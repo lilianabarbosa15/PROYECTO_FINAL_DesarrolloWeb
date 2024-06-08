@@ -19,6 +19,7 @@ import (
 función para conectarse a la instancia de PostgreSQL, en general sirve para cualquier base de datos SQL.
 Necesita la URL del host donde está instalada la base de datos y el tipo de base datos (driver)
 */
+
 func ConectarDB(url, driver string) (*sqlx.DB, error) {
 	pgUrl, _ := pq.ParseURL(url)
 	db, err := sqlx.Connect(driver, pgUrl) // driver: postgres

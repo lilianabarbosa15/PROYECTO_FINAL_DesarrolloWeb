@@ -31,4 +31,14 @@ export const getAutomobiles = async () => {
     return [];
   }
 };
+
+export const getReservas = async () => {
+  try {
+    const { data } = await axios.get(endpoints.reservas);
+    return data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
   

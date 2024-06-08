@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Renta Car</title>
-    <link rel="stylesheet" href="/styles/alquilados.css" />
+    <link rel="stylesheet" href="../styles/alquilados.css" />
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://kit.fontawesome.com/ea43250ec2.js" crossorigin="anonymous"></script>
-    <script type="module" src="../scripts/home.js" defer></script>
+    <script type="module" src="../scripts/alquilados.js" defer></script>
 </head>
 
 <body>
@@ -24,7 +24,7 @@
 
                 <li class="options">
                     <i class="fa-solid fa-cart-shopping"></i>
-                    <a href="#">Reservar Autos</a>
+                    <a href="./home.html">Reservar Autos</a>
                 </li>
 
                 <li class="options">
@@ -40,7 +40,29 @@
     </aside>
     <section class="seccionPrincipal">
         <h1>Tus Reservas</h1>
-        <div class="Reservas"></div>
+        <div class="Reservas">
+            <!-- Reserva example, it will be dynamically populated -->
+        </div>
     </section>
+    <div class="modalCart hidden">
+        <section class="contenidoModal">
+            <h2> Detalles de la Reserva </h2>
+            <div class="cuerpoModal">
+                <div class="sectionDetalles">
+                    <div class="Caracteristicas">
+                        <h4>Detalles</h4>
+                    </div>
+                    <div class="Reserva">
+                        <h4>Reserva</h4>
+                    </div>
+                    <div class="ServiciosAdicionales">
+                        <h4>Servicios Adicionales</h4>
+                    </div>
+                </div>
+                <button id="closeModal">Cancelar</button>
+            </div>
+        </section>
+    </div>
 </body>
+
 </html>
